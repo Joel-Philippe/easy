@@ -1,0 +1,179 @@
+/* Home.module.css */
+@font-face {
+  font-family: 'typo';
+  src: url('/typo.otf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'a_d_mono';
+  src: url('/a_d_mono.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Silicone W00 Bold";
+  src: url("https://db.onlinewebfonts.com/t/980986481f221ceb339f1d489fe858b3.eot");
+  src: url("https://db.onlinewebfonts.com/t/980986481f221ceb339f1d489fe858b3.eot?#iefix")format("embedded-opentype"),
+  url("https://db.onlinewebfonts.com/t/980986481f221ceb339f1d489fe858b3.woff2")format("woff2"),
+  url("https://db.onlinewebfonts.com/t/980986481f221ceb339f1d489fe858b3.woff")format("woff"),
+  url("https://db.onlinewebfonts.com/t/980986481f221ceb339f1d489fe858b3.ttf")format("truetype"),
+  url("https://db.onlinewebfonts.com/t/980986481f221ceb339f1d489fe858b3.svg#Silicone W00 Bold")format("svg");
+}
+@font-face {
+  font-family: 'Xenara';
+  src: url('/Xenara.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+.footerContainer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #f9ede9;
+    padding: 10px 0;
+    display: flex;
+    justify-content: center;
+    z-index: 100;
+    border-bottom: 2px solid #ff80b1;
+  }
+  .menuButtons {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding: 0 10px;
+    scroll-behavior: smooth;
+  }
+  
+  .menuButtons button {
+    background-color: whitesmoke;
+    font-family: 'typo';
+    color: #5D4037;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    white-space: nowrap;
+    transition: background-color 0.3s;
+  }
+  
+  .menuButtons button:hover {
+    background: linear-gradient(to right, #f6eee2 0%, #edf0f5 100%);
+    color: rgb(0, 0, 0);
+  }
+  
+  /* Modal styling */
+  .modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(162 162 162 / 72%);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+  }
+  
+  .modalContent {
+    background: #f6eee2;
+    width: 90%;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    overflow-y: auto;
+    max-height: 600px;
+    animation: fadeIn 0.5s ease;
+  }
+  
+  .modalHeader {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #FB8C00;
+  }
+  
+  .modalCloseButton {
+    color: black;
+    background: transparent;
+    border: none;
+    font-size: 35px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+  }
+  
+  .modalBody {
+    margin-top: 15px;
+  }
+  .icon {
+    margin-right: 8px;
+    font-size: 1.2em;
+  }
+  .cartModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  /* ✅ Style par défaut du bouton panier (lorsqu'il est vide) */
+.cartButton {
+  font-family: 'Xenara';
+  background-color: gray;
+  color: white;
+  border-radius: 8px;
+  padding: 10px 15px;
+  font-size: large;
+  display: flex;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+  position: relative;
+}
+
+/* ✅ Style lorsque le panier contient au moins un article */
+.cartButton.activeCart {
+  font-family: 'typo';
+  font-weight: 100;
+  font-size:smaller;
+  background:white;
+  color: #e05601  !important; /* Fond noir */
+}
+.cartButton.activeCart:hover {
+  color: rgb(255, 17, 0) !important; /* Texte blanc */
+}
+
+/* ✅ Icône du panier */
+.icon {
+  margin-right: 8px;
+  font-size: x-large;
+  font-family: 'typo';
+}
+
+/* ✅ Style du compteur du panier */
+.cartCount {
+  background: #ff3d00;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  right: -5px;
+}

@@ -1,0 +1,442 @@
+/* Card.css */
+@font-face {
+    font-family: 'allroundgothic';
+    src: url('/allroundgothic.otf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+@font-face {
+    font-family: 'typo';
+    src: url('/typo.otf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'a_d_mono';
+    src: url('/a_d_mono.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: "Silicone W00 Bold";
+    src: url("https://db.onlinewebfonts.com/t/980986481f221ceb339f1d489fe858b3.eot");
+    src: url("https://db.onlinewebfonts.com/t/980986481f221ceb339f1d489fe858b3.eot?#iefix")format("embedded-opentype"),
+    url("https://db.onlinewebfonts.com/t/980986481f221ceb339f1d489fe858b3.woff2")format("woff2"),
+    url("https://db.onlinewebfonts.com/t/980986481f221ceb339f1d489fe858b3.woff")format("woff"),
+    url("https://db.onlinewebfonts.com/t/980986481f221ceb339f1d489fe858b3.ttf")format("truetype"),
+    url("https://db.onlinewebfonts.com/t/980986481f221ceb339f1d489fe858b3.svg#Silicone W00 Bold")format("svg");
+}
+/* ✅ Cacher la barre de défilement pour tous les navigateurs */
+html, body {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+  }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+  }
+  
+  /* ✅ Cacher la barre de défilement pour WebKit (Chrome, Safari, Edge) */
+  html::-webkit-scrollbar {
+    display: none;
+  }
+  
+.cards-container {
+    margin-left: 30px;
+    display: flex;
+    margin-bottom: 100px;
+    width: 80%;
+    flex-wrap: wrap;
+    margin-top: 30px;
+}
+
+.no-scroll {
+    overflow: hidden;
+  }
+
+  .card {
+    padding-left: 7px;
+    padding-top: 7px;
+    padding-right: 7px;
+    border-radius: 16px 16px 16px 16px;
+    max-width: 350px;
+    transition: box-shadow 0.8s ease;
+    box-shadow: rgb(245, 243, 243) 0px 0px 30px;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    margin-bottom: 30px;
+}
+  .card:hover {
+    border-radius: 16px 16px 16px 16px;
+    transition: box-shadow 0.8s ease;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    box-shadow: rgb(244, 244, 244) 0px 0px 30px;
+    backdrop-filter: blur(10px);
+}
+.header_card {
+    position: relative;
+    width: 100%;
+    height: auto;
+}
+
+.picture_card {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.title_card {
+    font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 2em;
+    font-weight: 100;
+    letter-spacing: 2px;
+    display: inline-block;
+    transition: background 0.3s ease;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+  }
+  .title_card_1 {
+    z-index: 10000;
+    font-family: 'allroundgothic';
+    font-size: 30px;
+    color: #5D4037;
+    margin: 10px;
+    margin-bottom: 0;
+    margin-top: 0px;
+  }
+
+  .title_card .title-button {
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 8px 12px;
+    background: white;
+    color: #EF6C00;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  .title_card .title-button:hover {
+    background: #0056b3;
+  }
+.title_card_subtitle {
+    position: relative;
+    font-family:'allroundgothic';
+    font-weight: 700;
+    font-size: 12px;
+    margin-left: 13px;
+    color: rgb(41, 33, 30);
+    margin-right: auto;
+    margin-top: 0px;
+    width: 90%;
+}
+
+.time_card {
+    font-family: 'allroundgothic';
+    color: black;
+    font-weight: 900;
+    top: 0;
+    font-size: 13px;
+    margin-bottom: 8px;
+    margin: 5px;
+}
+
+
+
+.flex-row {
+    display: inline;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.overlap-group2 {
+    justify-content: right;
+    margin-bottom: 29px;
+    margin-top: 10px;
+}
+
+.stock_card, .percent {
+    font-size: 1.3em;
+    display: block;
+    color: #1f4443;
+}
+
+
+
+
+.price_content {
+    display: contents;
+    margin-left: 0;
+    margin-right: 20px;
+}
+
+.price_card {
+    text-align: center;
+    margin-right: auto;
+    font-family: cursive;
+    font-weight: 700;
+    font-size: medium;
+    color: #3f7c42;
+    margin-left: 0;
+}
+.initial_price{
+    color: rgb(65 202 1);
+    font-weight: 700;
+    margin-left: 10px;
+    font-size: 2em;
+}
+.updat_price{
+    margin-left: 8px;
+    font-weight: 700;
+    font-size: 15px;
+}
+
+.flex-col {
+    display: flex;
+    flex-direction: column;
+}
+
+.description_card {
+    font-size: 14px;
+    text-align: center;
+    color: rgb(54, 57, 77);
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+.overlap-group-3 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.inter-bold-white-a{
+    color: #5d2a18;/*#9C27B0*/
+    font-weight: 900;
+    letter-spacing: 2px;
+}
+.add_card {
+    padding: 10px;
+    color: black;
+    font-weight: 700;
+    text-align: center;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 100%;
+    background: #efefef29;
+}
+/************************************ Card.css UPDATE************************************************/
+
+.card_2 {
+    background-color: #ffffff3a;
+    margin: 20px;
+    border-radius: 10px;
+    width: 449px;
+    box-shadow: 0 8px 16px 0 rgb(0, 0, 0);
+    transition: box-shadow 0.3s ease;
+}
+
+.card_2:hover {
+    box-shadow: 0 16px 32px 0 #4bc0c0;
+    background: red;
+    
+}
+
+.header_card_2 {
+    position: relative;
+    width: 100%;
+    height: 240px;
+}
+
+.picture_card_2 {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.title_card_2{
+    width: 100%;
+    position: relative;
+    text-align: center;
+    color: #1f4443;
+    font-size: 15px;
+    font-weight: 100;
+    
+}
+.title_card_on_change{
+    width: 100%;
+    position: relative;
+    text-align: center;
+    color: rgb(74, 75, 80);
+    font-size: 20px;
+    font-weight: 500;
+}
+.time_card_2 {
+    position: absolute;
+    width: max-content;
+    top: 1px;
+    color: rgb(255 255 255 / 75%);
+    right: 1px;
+    font-size: 17px;
+    background-color: #0000003c;
+}
+
+
+
+.flex-row_2 {
+    display: inline;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.overlap-group2_2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.stock_card_2, .percent2_2 {
+    font-size: 16px;
+    margin-top: 63px;
+}
+.stock_card_3{
+    font-size: 16px;
+}
+.disable_color{
+    color: #4bc0c0;
+    font-weight: 500;
+}
+.rectangle-14_2 {
+    width: auto;
+    height: auto;
+    margin-right: 21px;
+}
+
+.price_content_2 {
+    margin: 2px 0;
+}
+
+.price_card_2 {
+    text-align: center;
+    font-size: 20px;
+    color: #572a11;
+    width: 100%;
+}
+
+.flex-col_2 {
+    display: flex;
+    flex-direction: column;
+}
+
+.description_card_2 {
+    font-size: 14px;
+    text-align: center;
+    color: rgb(54, 57, 77);
+    margin-left: 15px;
+    margin-right: 15px;
+}
+
+
+
+.add_card_2 {
+    margin-top: 10px;
+    padding: 10px;
+    background-image: linear-gradient(45deg, #00eeff2b, rgb(0 0 0 / 10%));
+    color: #021845;
+    text-align: center;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.carousel * {
+    border-radius: 15px;
+}
+
+.picture_card-container.expanded {
+    height: 100vh;
+}
+  
+  .valign-text-middle-color {
+    color: #1f4443;
+  }
+
+
+.cart-items-container {
+    display: flex;
+    flex-wrap: wrap;
+    background-color: bisque;
+}
+
+
+.cart-item-title {
+    font-weight: bold;
+    color: #447d7f;
+}
+
+.cart-item-price {
+    color: #888;
+    margin-bottom: 10px;
+}
+
+.cart-item-image {
+    justify-content: center;
+    width: auto;
+    height: auto;
+    max-width: 100px;
+    max-height: 100px;
+    object-fit: cover;
+}
+h4{
+    font-size: 20px;
+    font-weight: 900;
+    color: #319795;
+    margin-bottom: 20px;
+}
+
+@keyframes slideInUp {
+    0% {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.popup {
+    animation: slideInUp 2s ease-out both;
+}
+
+@media (max-width: 1050px) {
+      .title_card_1 {
+    font-family: 'allroundgothic';
+    font-size: 19px;
+  }
+    .card {
+        margin-left: auto;
+        margin-right: auto;
+        padding-bottom: 8px;
+        border-radius: 10px;
+        transition: box-shadow 0.3s ease;
+    }
+    .cards-container {
+        margin-left: auto;
+        width: 100%;
+        justify-content: center;
+        overflow: hidden;
+        flex-wrap: wrap;
+    }
+
+    .time_card {
+        width: max-content;
+        font-weight: 900;
+        top: 0;
+        font-size: 15px;
+        margin-bottom: 8px;
+    }
+}

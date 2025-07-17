@@ -1,0 +1,106 @@
+body.no-scroll {
+  overflow: hidden;
+}
+.panier {
+  width: 100%;
+  border: #146361;
+  padding-bottom: 5px;
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0.1);
+}
+
+.panier-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #146361;
+}
+
+.panier-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.panier-item-title {
+  font-size: 16px;
+  color: #146361;
+}
+
+.panier-item-price {
+  font-size: 16px;
+  color: #146361;
+}
+
+.panier-total {
+  font-size: 15px;
+  color: #146361;
+  margin: 20px;
+}
+.panier-total-to-add {
+  color: #333;
+  padding: 3%;
+  background-color: bisque;
+  border-style: dotted ;
+  border-width: 3px;
+  border-radius: 10px;
+  margin-left: 10px;
+}
+.MuiDialogContent-root{
+  flex: 1 1 auto;
+  padding: 1px 3px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.MuiDialog-paper{
+      margin: 5px; 
+      position: relative;
+      overflow-y: auto;
+}
+.MuiDialog-paper{
+  margin: 13px;
+  position: relative;
+  overflow-y: auto;
+}
+
+
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  overflow: hidden;
+}
+
+.dialog-content {
+  background-color: #fff4df;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 90%; /* Ajustez cette valeur selon vos besoins */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow-y: auto; /* Permet le défilement vertical */
+  position: relative; /* Assurez-vous que le conteneur est positionné relativement */
+  padding-bottom: 0;
+}
+
+
+.fixed-footer {
+  position: sticky; /* Utilisez sticky pour que le conteneur colle au bas du contenu lors du défilement */
+  bottom: 0;
+  background-color: #fff4df; /* Assurez-vous que le fond est identique à celui du conteneur */
+  padding: 10px 0;
+  width: 100%;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1); /* Optionnel: ajoute une ombre pour séparer visuellement */
+}
+
+.fixed-button-container {
+  text-align: center;
+}
+

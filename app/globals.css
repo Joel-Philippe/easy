@@ -1,0 +1,735 @@
+@import "~slick-carousel/slick/slick.css";
+@import "~slick-carousel/slick/slick-theme.css";
+@import url("https://fonts.googleapis.com/css2?family=Russo+One&display=swap");
+@font-face {
+  font-family: 'typo';
+  src: url('/typo.otf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'a_d_mono';
+  src: url('/a_d_mono.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Silicone W00 Bold";
+  src: url("https://db.onlinewebfonts.com/t/980986481f221ceb339f1d489fe858b3.eot");
+  src: url("https://db.onlinewebfonts.com/t/980986481f221ceb339f1d489fe858b3.eot?#iefix")format("embedded-opentype"),
+  url("https://db.onlinewebfonts.com/t/980986481f221ceb339f1d489fe858b3.woff2")format("woff2"),
+  url("https://db.onlinewebfonts.com/t/980986481f221ceb339f1d489fe858b3.woff")format("woff"),
+  url("https://db.onlinewebfonts.com/t/980986481f221ceb339f1d489fe858b3.ttf")format("truetype"),
+  url("https://db.onlinewebfonts.com/t/980986481f221ceb339f1d489fe858b3.svg#Silicone W00 Bold")format("svg");
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+/* ✅ Cacher la barre de défilement pour tous les navigateurs */
+html, body {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+.no-scroll {
+  overflow: hidden;
+  height: 100vh;
+}
+body {
+  overflow: auto !important;
+}
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* ✅ Cacher la barre de défilement pour WebKit (Chrome, Safari, Edge) */
+html::-webkit-scrollbar {
+  display: none;
+}
+
+.tasklist-title {
+  background-image: linear-gradient(45deg, black, bisque);
+-webkit-background-clip: text;
+  color: black;
+}
+
+.navbar-2{
+  margin-top: 20px;
+  align-items: center;
+  background-color: var(--white);
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-color: var(--black);
+  display: flex;
+  height: 72px;
+  padding: 0 64px;
+  width: 1440px;
+}
+
+.title {
+  color: var(--white);
+  font-weight: 700;
+  line-height: 67.2px;
+  margin-top: 1px;
+  text-align: center;
+  width: 768px;
+  color: black;
+}
+
+.column {
+  align-items: flex-start;
+  display: flex;
+  margin-left: 288px;
+  width: 267px;
+}
+
+.les-thmatiques {
+  color: var(--black);
+  font-weight: 400;
+  line-height: 24px;
+  margin-top: -1px;
+  min-width: 119px;
+  white-space: nowrap;
+}
+
+.chevron-down {
+  height: 24px;
+  width: 24px;
+}
+.inscription {
+  color: #1e1e1e;
+  font-weight: 400;
+  line-height: 24px;
+  position: relative;
+  white-space: nowrap;
+  width: fit-content;
+}
+.button {
+  align-items: center;
+  border: 1px solid;
+  border-color: var(--white);
+  display: inline-flex;
+  gap: 8px;
+  justify-content: center;
+  margin-left: 139px;
+  position: relative;
+}
+
+.connexion {
+  color: var(--white);
+  font-weight: 400;
+  line-height: 24px;
+  margin-left: -1.00px;
+  margin-top: -1.00px;
+  position: relative;
+  white-space: nowrap;
+  width: fit-content;
+}
+
+.rubik-bold-white-24px {
+  color: var(--white);
+  font-family: var(--font-family-rubik);
+  font-size: var(--font-size-m);
+  font-style: normal;
+  font-weight: 700;
+}
+
+.rubikone-regular-normal-white-24px {
+  color: var(--white);
+  font-family: var(--font-family-rubik_one-regular);
+  font-size: var(--font-size-m);
+  font-style: normal;
+  font-weight: 400;
+}
+.css-1fmgmr5{
+  background: rgb(255, 246, 241);
+}
+.css-1mayg29{
+  background: rgb(255, 246, 241);
+}
+.menu-items {
+  position: sticky;
+  top: 0;
+  align-items: flex-start;
+  gap: 20px;
+  margin-right: 0.15px;
+  width: 100%;
+  height: 110px;
+  z-index: 3;
+  overflow-x: auto;
+  white-space: nowrap;
+  transition: background-color 0.05s;
+  background: #f9ede9;
+}
+
+.overlap-group-container {
+  align-items: center;
+  display: flex;
+  gap: 19px;
+  min-width: 100%;
+  height: 100%;
+}
+
+.overlap-group {
+  justify-content: center;
+  display: flex;
+  background-color: var(--gray-nurse);
+  border-radius: 5px;
+  height: 35px;
+  position: relative;
+  width: auto;
+  margin-left: 1%;
+}
+
+.categories {
+  letter-spacing: 0;
+  font-family: 'allroundgothic';
+  text-align: center;
+  width: 159px;
+  font-size:14px;
+  border-radius: 15px;
+  color: #EF6C00;
+  gap: 70px;
+  margin: auto;
+  transition: color 0.3s ease; /* Ajoutez une transition pour un effet de changement de couleur plus fluide */
+}
+
+.categories:hover {
+  color: #ff9800; /* Changez la couleur au survol de la souris */
+}
+
+
+.special_categories {
+  width: 100%;
+  height: 35px;
+  font-weight: 900;
+  font-size: medium;
+  justify-content: center;
+  align-items: center;
+}
+
+.categories2 {
+  height: 39px;
+  letter-spacing: 0;
+  text-align: center;
+  margin-left: 50px;
+  font-weight: 900;
+  font-size: xx-small;
+  width: auto;
+  color: rgb(54, 57, 77);
+  display: flex;
+  gap: 20px;
+  border-radius: 50px;
+}
+.categorie-text {
+  font-family: 'allroundgothic';
+  border-radius: 8px;
+  font-size: 14px;
+  padding: 6px;
+  background: #8D6E63;
+  backdrop-filter: blur(10px);
+  background: snow;
+}
+
+.categorie_button {
+  width: fit-content;
+}
+
+.selected {
+  color: rgb(134, 124, 150);
+  border-radius: 8px;
+}
+
+/* Optional: Adding smooth scrolling for better UX */
+.menu-items,
+.overlap-group-container {
+  scroll-behavior: smooth;
+  z-index: 100;
+}
+
+.overlap-group-container {
+  position: sticky;
+  top: 0; /* Change this to the distance you want the menu to stick from the top of the viewport */
+}
+.css-1kfu8nn{
+  background: white;
+  z-index: 10;
+}
+
+.img_bulle{
+  border-radius: 100%;
+}
+.css-1pnmot1{
+  z-index: 10;
+}
+.slider-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.carousel {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+.carousel-item {
+  min-width: 100%;
+  cursor: pointer;
+}
+
+.carousel-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.fullscreen-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.fullscreen-carousel {
+  width: 80%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+}
+
+.fullscreen-carousel-item {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.fullscreen-carousel-image {
+  width: 100%;
+  height: auto;
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+.small-slider .slide-image {
+  height: 100px;
+  background-color: #C5E0DC;
+  object-fit: cover;
+  border-radius: 20px;
+}
+
+.MuiDialogContent-root{
+  flex: 1 1 auto;
+  padding: 1px 3px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.MuiDialog-paper{
+      margin: 5px; 
+      position: relative;
+      overflow-y: auto;
+}
+
+.double-strikethrough {
+  position: relative;
+  display: inline-block;
+  color: rgb(99, 99, 99); /* Assurez-vous que le texte est visible */
+}
+
+.double-strikethrough::before,
+.double-strikethrough::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: rgb(0, 0, 0); /* Assurez-vous que la couleur de la ligne est visible */
+}
+
+.double-strikethrough::before {
+  top: 35%; /* Position de la première ligne */
+}
+
+.double-strikethrough::after {
+  bottom: 35%; /* Position de la deuxième ligne */
+}
+
+.card .expired-overlay {
+  position: absolute;
+  font-family: var(--font-family-rubik_glitch);
+  font-size: 1em;
+  font-weight: 900;
+  text-align: center;
+  white-space: nowrap;
+  background-color: white;
+  color: #9E9E9E;
+  z-index: 2;
+  padding: 20px;
+  height: auto;
+  padding: 20px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+.time_card.expired {
+  display: none;
+}
+
+.expired-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+
+.request-button {
+  color: #608f00;
+  border: none;
+  padding: 10px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 8px;
+  font-weight: 600;
+  margin-left: 15%;
+  background: #fffacf;
+}
+
+.request-button:hover {
+  color: rgb(82, 11, 77);
+
+}
+
+.skill {
+  height: 13px;
+  position: relative;
+  width: 67%;
+}
+
+.bar-container {
+  height: 100%;
+  border-radius: 25px;
+  box-shadow: inset 0 0 5px #FFC107;
+  align-items: center;
+  justify-content: center;
+  margin-left: 5px;
+  margin-right: auto;
+}
+
+.bar {
+  height: 100%;
+  background: rgb(139, 195, 74);
+  border-radius: 25px;
+  transition: width 1s ease-in-out;
+}
+
+.bar.green {
+  background-color: #4CAF50;
+}
+
+.bar.red-orange {
+  background-color: rgb(169 2 2); /* rouge orange */
+}
+
+.bar.red {
+  background-color: rgba(169, 2, 2, 0.466);
+}
+
+.bar-text {
+  position: absolute;
+  font-family:'Silicone W00 Bold';
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 3px;
+  margin-top: 5px;
+  width: 100%;
+  margin-left: 5px;
+  color: #572a11;
+}
+
+.zoomed-category-icon img {
+  transform: scale(1.1) rotate(5deg);
+  transition: transform 0.3s ease-in-out, filter 0.5s ease-in-out;
+}
+
+.highlight-background {
+  border-radius: 30%;
+  transition: background-color 0.5s ease-in-out;
+  
+}
+
+.categorie_button img {
+  transition: transform 0.5s ease-in-out, filter 0.3s ease-in-out;
+}
+
+.categorie_button {
+  border-radius: 30%;
+  min-width: 100px;
+  transition: background-color 0.4s ease-in-out;
+}
+.animated-title {
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  width: 100%;
+  height: auto; /* Vous pouvez ajuster cette valeur selon vos besoins */
+  border-radius: 12px;
+  background-color: #f9f9d4;
+}
+
+.animated-title text {
+  animation: stroke 8s infinite alternate;
+  stroke: white;
+  font-weight: 900;
+  letter-spacing: 5px;
+  font-size: 3rem; /* Ajuster la taille du texte */
+  fill: #009688; /* Départ transparent */
+}
+.custom-loader {
+  width: 50px;
+  height: 50px;
+  display: grid;
+}
+
+.custom-loader::before,
+.custom-loader::after {
+  content: "";
+  grid-area: 1/1;
+  --c: radial-gradient(farthest-side, #009688 92%, #009688);
+  background:
+    var(--c) 50% 0,
+    var(--c) 50% 100%,
+    var(--c) 100% 50%,
+    var(--c) 0 50%;
+  background-size: 12px 12px;
+  background-repeat: no-repeat;
+  animation: s2 1s infinite;
+}
+
+.custom-loader::before {
+  margin: 4px;
+  filter: hue-rotate(45deg);
+  background-size: 8px 8px;
+  animation-timing-function: linear;
+}
+.illustration-container {
+  width: 100%;
+  max-width: 1420px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.illustration-container img {
+  object-fit: contain;
+}
+.add-to-cart-button {
+  display: flex;
+  width: 100%;
+  font-family:'allroundgothic';
+  align-items: center;
+  color: #762956;
+  background: white;
+  padding: 10px;
+  margin: 11px;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.3sease;
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.add-to-cart-button:disabled {
+  cursor: not-allowed;
+  border: 0px;
+  opacity: 0.5;
+}
+.add-to-cart-button:hover {
+color: #ff9900;
+background: rgb(196, 249, 255);
+}
+.cart-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  border-radius: 8px;
+  width: 100%;
+}
+
+.cart-image img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.cart-details {
+  flex: 1;
+  margin-left: 10px;
+}
+
+.cart-price-old {
+  text-decoration: line-through;
+  color: red;
+  margin-right: 5px;
+}
+
+.cart-quantity button {
+  border: none;
+  background: #007bff;
+  color: white;
+  padding: 5px 10px;
+  margin: 0 5px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+ .text-gray-800{
+color: #762956;
+font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+font-size: medium;
+font-weight: 400;
+}
+.Je_Prends:hover{
+  background: rgb(173, 244, 252);
+  color: #762956;
+
+}
+.recherche_article{
+  position: relative;
+}
+@keyframes s2 {
+  100% {
+      transform: rotate(.5turn);
+  }
+}
+
+
+@keyframes stroke {
+
+  80% {
+    fill: #e15600;
+    stroke: white;
+    stroke-width: 3;
+  }
+  100% {
+    fill: #FF9800;
+    stroke: white;
+    stroke-dashoffset: -25%;
+    stroke-dasharray: 50% 0;
+    stroke-width: 0;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .menu-items {
+  height: 87px;
+}
+
+  .animated-title {
+    font-family: "Russo One", sans-serif;
+    width: 100%;
+    height: 60px; /* Vous pouvez ajuster cette valeur selon vos besoins */
+  }
+  .animated-title text {
+    animation: stroke 8s infinite alternate;
+    stroke: #009688;
+    font-weight: 100;
+    font-size: 52px;
+    fill: #009688;
+}
+  .request-button {
+    font-size: 0.9em ;
+  }
+
+  .fullscreen-carousel-image {
+      max-width: 100%;
+      height: auto;
+  }
+  .card .expired-overlay {
+    position: absolute;
+    font-family: var(--font-family-rubik_glitch);
+    font-size: 1em;
+    font-weight: 900;
+    text-align: center;
+    white-space: nowrap;
+    background-color: white;
+    z-index: 2;
+    padding: 20px;
+    height: auto;
+    padding: 20px;
+    transition: all 0.3s ease;
+  }
+}
+.page-content {
+  transition: transform 0.4s ease;
+  width: 100%;
+}
+
+.page-content.slide-left {
+  transform: translateX(-25px); /* Largeur de la modale ou plus selon besoin */
+}
+
+@media (max-width: 1496px) {
+  .page-content {
+  transition: transform 0.4s ease;
+  width: 100%;
+  
+}
+}
+
+@media (max-width: 768px) {
+  .page-content {
+  transition: transform 0.4s ease;
+  width: 100%;
+}
+  .overlap-group {
+    margin-left: 20px; /* Adjust margin for smaller screens */
+  }
+  .add-to-cart-button{
+    margin-top: 20px;
+    font-size: 15px;
+  }
+  .categories {
+    width: 90px;
+    font-size: 14px;
+  }
+  .illustration-container {
+    width: 100%;
+    height: auto;
+    max-width: 520px;
+    margin: 0 auto;
+    overflow: hidden;
+  }
+}
+.chakra-ui-light{
+  background: #f9ede9;
+  padding-right: 0 !important;
+}
+
+.body-slider {
+  margin: 0;
+  border-radius: 10px;
+  min-height: 35px;
+  width: 35px;
+  display: grid;
+  place-content: center;
+  background: #556270;
+  animation: b 60s infinite;
+}
+
+@keyframes b {
+  0%, 3%   { background: #774F38; }
+  14%, 19% { background: #B38184; }
+  31%, 36% { background: #036564; }
+  45%, 55% { background: #C5E0DC; }
+  64%, 69% { background: #424254; }
+  81%, 86% { background: #4DBCE9; }
+  97%, 100% { background: #774F38; }
+}

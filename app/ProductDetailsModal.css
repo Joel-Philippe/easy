@@ -1,0 +1,261 @@
+/* ProductDetailsModal.css */
+/* ✅ Cacher la barre de défilement pour tous les navigateurs */
+html, body {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+.no-scroll {
+  overflow: hidden;
+  height: 100vh;
+}
+
+/* ✅ Cacher la barre de défilement pour WebKit (Chrome, Safari, Edge) */
+html::-webkit-scrollbar {
+  display: none;
+}
+.modal-close-slider{
+  margin-top: 40px;
+}
+/* Overlay assombri */
+.modal-overlay {
+  position: fixed;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+}
+
+/* Modale à droite */
+.modal-content {
+  position: fixed !important;  /* Force la position fixe */
+  pointer-events: auto;
+  top: 0;
+  right: 0;
+  width: 500px;  /* Ajuste selon tes besoins */
+  height: 100vh;
+  box-shadow: -4px 0px 10px rgba(0, 0, 0, 0.2);
+  overflow-y: auto;
+  z-index: 1100;
+}
+
+/* Header */
+.modal-header {
+  font-size: 22px;
+  font-weight: bold;
+  text-align: center;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 10px;
+  color: #ffeb3b;
+}
+
+/* Description */
+.modal-body p {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #795548;
+  margin-bottom: 12px;
+}
+
+/* Prix */
+.prix {
+  font-size: 20px;
+  font-weight: bold;
+  color: #ff5a5f;
+  margin-top: 10px;
+}
+.modal-header-bar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 50px;
+  z-index: 10001;
+  background: #f8ede9;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+.modal-close-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: rgb(255, 160, 160);
+  color: black;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 10001;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.modal-close-btn:hover {
+  background-color: #f0f0f0;
+  transform: scale(1.1);
+}
+
+
+.prenom_du_proposant {
+  font-weight: bold;
+  color: #2b6cb0;
+  margin-left: 5px;
+}
+
+.ellipse {
+  display: flex;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-left: 10px;
+}
+
+/* Caractéristiques */
+.rectangle-35 {
+  background: white;
+}
+
+.caracteristiques-table {
+  border-radius: 8px;
+  background: white;
+}
+
+.table-title {
+  font-size: large;
+  font-weight: 500;
+  color: #333;
+  background-color: white;
+}
+
+.caracteristiques-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 10px;
+}
+
+.caracteristique-item {
+  background: white;
+}
+
+.caracteristique-nom {
+  font-size: 12px;
+  font-weight: 600;
+  color: #313335;
+}
+
+.caracteristique-valeur {
+  font-size: 12px;
+  font-weight: 200;
+  color: #333;
+}
+.points-importants-container {
+  background: #f7f6f1;
+  padding: 15px;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 600px; /* Ajuste selon ton besoin */
+  margin: auto;
+}
+
+.points-importants-title {
+  color: #4d2e23;
+  font-family: "Silicone W00 Bold";
+  font-size: medium;
+  font-weight: bolder;
+  width: 100%;
+  margin: auto;
+  margin-top: 25px;
+}
+.title-product {
+  color: #ff80b1;
+  text-align: center;
+  font-family: "Silicone W00 Bold";
+  font-size: medium;
+  font-weight: bolder;
+  width: 100%;
+  margin: auto;
+}
+.points-importants-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* ✅ Toujours 2 colonnes */
+  gap: 15px; /* ✅ Espacement entre les éléments */
+  justify-content: center;
+  align-items: center;
+  margin-top: inherit;
+  margin-bottom: 20px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.point-important-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  border-radius: 8px;
+}
+
+.point-important-image {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.point-important-text {
+  font-size: 14px;
+  font-family: 'allroundgothic';
+  text-align: left;
+  color: #43271d;
+  font-weight: 500;
+}
+
+/* Commentaires */
+.comment-section {
+  margin-top: 20px;
+}
+.slider-description{
+  border-radius: 20px;
+  margin: auto;
+  width: 100%;
+}
+
+.animated-slide-modal {
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+}
+/* Style pour centrer la modal sur les petits écrans */
+@media (max-width: 800px) {
+  .chakra-modal__content {
+    position: fixed !important; /* Forcer la position fixe */
+    transform: translate(-50%, -50%);
+    width: 90%; /* Ajuste la largeur selon tes préférences */
+    overflow-y: auto;
+    border-radius: 8px;  /* Ajout d'un rayon de bordure pour la rendre plus douce */
+  }
+  .slider-description{
+    width: 100%;
+    margin: auto;
+  }
+  .content-modal-screen{
+    position: fixed;
+    right: 0px;
+    top: -60px;
+    height: 100vh;
+    width: 100%;
+    padding: 2em;
+    opacity: 1;
+    will-change: auto;
+    transform: none;
+  }
+  .points-importants-title {
+    font-size: smaller;
+  margin: 0;
+  margin-top: 25px;
+}
+.points-importants-grid {
+  width: 100%;
+}
+}
