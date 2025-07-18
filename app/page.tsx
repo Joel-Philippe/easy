@@ -16,12 +16,14 @@ import Header from '@/components/Header';
 import Front from '../pages/front';
 import { CheckboxProvider } from '@/contexts/CheckboxContext';
 import { GlobalCartProvider, useGlobalCart } from "@/components/GlobalCartContext";
-import GlobalPrice from '@/components/globalprice'; // ✅ Ajout du panier global
+import GlobalPrice from '@/components/globalprice';
 
 import './Cards.css';
 
 export default function Home() {
-  const { user } = useAuth();
+  // Gestion sécurisée de useAuth avec vérification null
+  const authResult = useAuth();
+  const user = authResult?.user || null;
 
   return (
     <CheckboxProvider>
@@ -32,11 +34,15 @@ export default function Home() {
   );
 }
 
-// ✅ Déplace `useGlobalCart()` ici pour éviter l'erreur
-function InnerHome({ user }) {
+// Composant interne avec props typées
+interface InnerHomeProps {
+  user: any;
+}
+
+function InnerHome({ user }: InnerHomeProps) {
   const { globalCart } = useGlobalCart();
   const [activeModal, setActiveModal] = useState<string | null>(null);
-  const [isCartOpen, setIsCartOpen] = useState(false); // ✅ État pour afficher la modale du panier
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   const openModal = (modalType: string) => setActiveModal(modalType);
   const closeModal = () => setActiveModal(null);
@@ -62,8 +68,8 @@ function InnerHome({ user }) {
     }
   };
 
-  // ✅ Calcule le nombre d'articles dans le panier
-  const cartCount = Object.values(globalCart).reduce((sum, item) => sum + item.count, 0);
+  // Calcule le nombre d'articles dans le panier avec vérification
+  const cartCount = globalCart ? Object.values(globalCart).reduce((sum, item) => sum + (item?.count || 0), 0) : 0;
 
   return (
     <>
@@ -72,10 +78,9 @@ function InnerHome({ user }) {
       {user && (
         <div className={styles.footerContainer}>
           <div className={styles.menuButtons}>
-            {/* ✅ Ajout du bouton Panier Global */}
             <button 
               onClick={() => setIsCartOpen(true)} 
-              className={`${styles.cartButton} ${cartCount > 0 ? styles.activeCart : ''}`} // ✅ Ajout d'une classe dynamique
+              className={`${styles.cartButton} ${cartCount > 0 ? styles.activeCart : ''}`}
             >
               <FontAwesomeIcon icon={faShoppingCart} className={styles.icon} /> Panier
               {cartCount > 0 && <span className={styles.cartCount}>{cartCount}</span>}
@@ -84,10 +89,8 @@ function InnerHome({ user }) {
         </div>
       )}
 
-      {/* ✅ Affichage du panier global sous forme de modale */}
       <GlobalPrice isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
 
-      {/* ✅ Affichage des autres modales si une est active */}
       {activeModal && (
         <div className={styles.modalOverlay} onClick={closeModal}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
