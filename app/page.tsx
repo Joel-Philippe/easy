@@ -89,7 +89,7 @@ function InnerHome({ user }: InnerHomeProps) {
         </div>
       )}
 
-      <GlobalPrice isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+      <GlobalPrice isOpen={isCartOpen} onClose={() => setIsCartOpen(true)} />
 
       {activeModal && (
         <div className={styles.modalOverlay} onClick={closeModal}>
