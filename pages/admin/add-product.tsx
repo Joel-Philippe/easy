@@ -1,5 +1,5 @@
 import React from 'react';
-import AddCard from '@/components/AddCard';
+import AddCard from '..//AddCard';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/router';
 import AdminMenu from '@/components/AdminMenu';
