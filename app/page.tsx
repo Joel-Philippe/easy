@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faUser,
@@ -24,8 +24,11 @@ import { CheckboxProvider } from '@/contexts/CheckboxContext';
 import { GlobalCartProvider, useGlobalCart } from '@/components/GlobalCartContext';
 
 import GlobalPrice from '@/components/globalprice';
-import Front from '../pages/front'; // ⚠️ à adapter selon si c’est une page ou un composant
+import Front from '../pages/front';
 import './Cards.css';
+
+import { collection, onSnapshot } from 'firebase/firestore';
+import { db } from '@/components/firebaseConfig';
 
 export default function Home() {
   const authResult = useAuth();
@@ -45,7 +48,7 @@ interface InnerHomeProps {
 }
 
 function InnerHome({ user }: InnerHomeProps) {
-  const { globalCart } = useGlobalCart();
+  const { globalCart, setGlobalCart } = useGlobalCart();
   const [activeModal, setActiveModal] = useState<string | null>(null);
   const [isCartOpen, setIsCartOpen] = useState(false);
 
@@ -78,6 +81,42 @@ function InnerHome({ user }: InnerHomeProps) {
       ? Object.values(globalCart).reduce((sum, item) => sum + (item?.count || 0), 0)
       : 0;
 
+  // 🔄 Synchronisation en temps réel des produits dans Firestore
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, 'cards'), (snapshot) => {
+      const latestProducts: Record<string, any> = {};
+      snapshot.forEach((doc) => {
+        latestProducts[doc.id] = { ...doc.data(), id: doc.id };
+      });
+
+      if (globalCart) {
+        const updatedCart: Record<string, any> = {};
+        let cartChanged = false;
+
+        Object.entries(globalCart).forEach(([cartId, cartItem]) => {
+          const latestProduct = latestProducts[cartId];
+
+          if (
+            latestProduct &&
+            cartItem.name === latestProduct.name &&
+            cartItem.price === latestProduct.price &&
+            latestProduct.stock > latestProduct.stock_reduc
+          ) {
+            updatedCart[cartId] = { ...latestProduct, count: cartItem.count };
+          } else {
+            cartChanged = true;
+          }
+        });
+
+        if (cartChanged) {
+          setGlobalCart(updatedCart);
+        }
+      }
+    });
+
+    return () => unsubscribe();
+  }, [globalCart, setGlobalCart]);
+
   return (
     <>
       <Front />
@@ -102,14 +141,14 @@ function InnerHome({ user }: InnerHomeProps) {
         <div className={styles.modalOverlay} onClick={closeModal}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <div className={styles.modalHeader}>
-              {{
+              {({
                 displayName: 'Modifier le Pseudo',
                 profilePhoto: 'Modifier la Photo de Profil',
                 specialRequests: 'Demandes Spéciales',
                 purchases: 'Achats',
                 messages: 'Messages',
                 changePassword: 'Mot de Passe',
-              }[activeModal]}
+              } as any)[activeModal]}
               <button className={styles.modalCloseButton} onClick={closeModal}>
                 &times;
               </button>
