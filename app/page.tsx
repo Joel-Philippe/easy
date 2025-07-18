@@ -30,6 +30,17 @@ import './Cards.css';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { db } from '@/components/firebaseConfig';
 
+// Déclare un type pour les items du panier
+type CartItem = {
+  count: number;
+  name: string;
+  price: number;
+  stock?: number;
+  stock_reduc?: number;
+  id?: string;
+  // ajoute ici d'autres propriétés si besoin
+};
+
 export default function Home() {
   const authResult = useAuth();
   const user = authResult?.user || null;
@@ -49,6 +60,10 @@ interface InnerHomeProps {
 
 function InnerHome({ user }: InnerHomeProps) {
   const { globalCart, setGlobalCart } = useGlobalCart();
+
+  // On précise ici que globalCart est un objet avec des valeurs de type CartItem
+  const typedGlobalCart: Record<string, CartItem> = globalCart || {};
+
   const [activeModal, setActiveModal] = useState<string | null>(null);
   const [isCartOpen, setIsCartOpen] = useState(false);
 
@@ -76,10 +91,9 @@ function InnerHome({ user }: InnerHomeProps) {
     }
   };
 
+  // Ici TypeScript sait que item a un champ count
   const cartCount =
-    globalCart && typeof globalCart === 'object'
-      ? Object.values(globalCart).reduce((sum, item) => sum + (item?.count || 0), 0)
-      : 0;
+    Object.values(typedGlobalCart).reduce((sum, item) => sum + (item.count || 0), 0) || 0;
 
   // 🔄 Synchronisation en temps réel des produits dans Firestore
   useEffect(() => {
