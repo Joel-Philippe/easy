@@ -21,7 +21,6 @@ import GlobalPrice from '@/components/globalprice';
 import './Cards.css';
 
 export default function Home() {
-  // Gestion sécurisée de useAuth avec vérification null
   const authResult = useAuth();
   const user = authResult?.user || null;
 
@@ -34,7 +33,6 @@ export default function Home() {
   );
 }
 
-// Composant interne avec props typées
 interface InnerHomeProps {
   user: any;
 }
@@ -68,7 +66,6 @@ function InnerHome({ user }: InnerHomeProps) {
     }
   };
 
-  // Calcule le nombre d'articles dans le panier avec vérification
   const cartCount = globalCart ? Object.values(globalCart).reduce((sum, item) => sum + (item?.count || 0), 0) : 0;
 
   return (
@@ -79,7 +76,7 @@ function InnerHome({ user }: InnerHomeProps) {
         <div className={styles.footerContainer}>
           <div className={styles.menuButtons}>
             <button 
-              onClick={() => setIsCartOpen(true)} 
+              onClick={openCart} 
               className={`${styles.cartButton} ${cartCount > 0 ? styles.activeCart : ''}`}
             >
               <FontAwesomeIcon icon={faShoppingCart} className={styles.icon} /> Panier
@@ -89,7 +86,7 @@ function InnerHome({ user }: InnerHomeProps) {
         </div>
       )}
 
-      <GlobalPrice isOpen={isCartOpen} onClose={() => setIsCartOpen(true)} />
+      <GlobalPrice isOpen={isCartOpen} onClose={closeCart} />
 
       {activeModal && (
         <div className={styles.modalOverlay} onClick={closeModal}>
