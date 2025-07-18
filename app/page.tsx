@@ -2,22 +2,29 @@
 
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faCamera, faClipboardList, faShoppingCart, faEnvelope, faKey } from '@fortawesome/free-solid-svg-icons';
+import {
+  faUser,
+  faCamera,
+  faClipboardList,
+  faShoppingCart,
+  faEnvelope,
+  faKey,
+} from '@fortawesome/free-solid-svg-icons';
 import styles from './Home.module.css';
+
 import DisplayNameForm from '@/components/DisplayNameForm';
 import ProfilePhotoForm from '@/components/ProfilePhotoForm';
 import SpecialRequests from '@/components/SpecialRequests';
 import Purchases from '@/components/Purchases';
 import Messages from '@/components/Messages';
 import ChangePasswordForm from '@/components/ChangePasswordForm';
-import { useAuth } from '@/contexts/AuthContext';
-import FooterMenu from '@/components/FooterMenu';
-import Header from '@/components/Header';
-import Front from '../pages/front';
-import { CheckboxProvider } from '@/contexts/CheckboxContext';
-import { GlobalCartProvider, useGlobalCart } from "@/components/GlobalCartContext";
-import GlobalPrice from '@/components/globalprice';
 
+import { useAuth } from '@/contexts/AuthContext';
+import { CheckboxProvider } from '@/contexts/CheckboxContext';
+import { GlobalCartProvider, useGlobalCart } from '@/components/GlobalCartContext';
+
+import GlobalPrice from '@/components/globalprice';
+import Front from '../pages/front'; // ⚠️ à adapter selon si c’est une page ou un composant
 import './Cards.css';
 
 export default function Home() {
@@ -66,7 +73,10 @@ function InnerHome({ user }: InnerHomeProps) {
     }
   };
 
-  const cartCount = globalCart ? Object.values(globalCart).reduce((sum, item) => sum + (item?.count || 0), 0) : 0;
+  const cartCount =
+    globalCart && typeof globalCart === 'object'
+      ? Object.values(globalCart).reduce((sum, item) => sum + (item?.count || 0), 0)
+      : 0;
 
   return (
     <>
@@ -75,8 +85,8 @@ function InnerHome({ user }: InnerHomeProps) {
       {user && (
         <div className={styles.footerContainer}>
           <div className={styles.menuButtons}>
-            <button 
-              onClick={openCart} 
+            <button
+              onClick={openCart}
               className={`${styles.cartButton} ${cartCount > 0 ? styles.activeCart : ''}`}
             >
               <FontAwesomeIcon icon={faShoppingCart} className={styles.icon} /> Panier
@@ -92,19 +102,14 @@ function InnerHome({ user }: InnerHomeProps) {
         <div className={styles.modalOverlay} onClick={closeModal}>
           <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
             <div className={styles.modalHeader}>
-              {activeModal === 'displayName'
-                ? 'Modifier le Pseudo'
-                : activeModal === 'profilePhoto'
-                ? 'Modifier la Photo de Profil'
-                : activeModal === 'specialRequests'
-                ? 'Demandes Spéciales'
-                : activeModal === 'purchases'
-                ? 'Achats'
-                : activeModal === 'messages'
-                ? 'Messages'
-                : activeModal === 'changePassword'
-                ? 'Mot de Passe'
-                : ''}
+              {{
+                displayName: 'Modifier le Pseudo',
+                profilePhoto: 'Modifier la Photo de Profil',
+                specialRequests: 'Demandes Spéciales',
+                purchases: 'Achats',
+                messages: 'Messages',
+                changePassword: 'Mot de Passe',
+              }[activeModal]}
               <button className={styles.modalCloseButton} onClick={closeModal}>
                 &times;
               </button>
