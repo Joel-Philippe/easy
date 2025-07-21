@@ -38,39 +38,10 @@ import FilterButtons from "../components/FilterButtons";
 import NoSearchResults from "../components/NoSearchResults";
 import { Grid3X3, Sparkles } from 'lucide-react';
 import ModernSlider from "../components/ImageSlider";
+import { useGlobalCart } from '../components/GlobalCartContext';
+import { Card } from '../types'; // ajuste le chemin
 
-interface Card {
-  _id: string;
-  categorie: string;
-  categorieImage: string;
-  categorieBackgroundColor: string;
-  affiche: string;
-  nouveau: boolean;
-  title: string;
-  subtitle?: string;
-  description: string;
-  images: string[];
-  stock: number;
-  stock_reduc: number;
-  price: string;
-  price_promo: string;
-  time: Date;
-  point_important_un: string;
-  point_important_deux: string;
-  point_important_trois: string;
-  point_important_quatre: string;
-  img_point_important_un: string;
-  img_point_important_deux: string;
-  img_point_important_trois: string;
-  img_point_important_quatre: string;
-  prenom_du_proposant: string;
-  photo_du_proposant: string;
-  origine: string;
-  caracteristiques: { titre: string, caracteristiques: { nom: string, valeur: string }[] }[];
-  produits_derives: { titre: string, description: string, prix: string, images: string[] }[];
-  reviews?: any[];
-  deliveryTime?: string;
-}
+
 
 export default function Front() {
   const [cards, setCards] = useState<Card[]>([]);
@@ -99,7 +70,7 @@ export default function Front() {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Card | null>(null);
   const [buttonText, setButtonText] = useState('Ajouter au panier');
-  const { globalCart, setGlobalCart } = useContext(GlobalCartContext);
+  const { globalCart, setGlobalCart } = useGlobalCart();
   const [videoEnded, setVideoEnded] = useState(false);
   const [videoFading, setVideoFading] = useState(false);
   const [addedItems, setAddedItems] = useState<Set<string>>(new Set());
@@ -108,7 +79,7 @@ export default function Front() {
   const [products, setProducts] = useState<any[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [selectedRating, setSelectedRating] = useState(0);
-  
+
   // 🔍 Nouvel état pour la recherche
   const [searchTerm, setSearchTerm] = useState('');
   // État pour le filtre actif
@@ -124,6 +95,7 @@ export default function Front() {
     pricePromo?: number;
     count: number;
   }>>([]);
+  
 
   const handleVideoEnd = () => {
     if (window.innerWidth > 768) {
@@ -193,7 +165,10 @@ export default function Front() {
     const unsubscribe = onSnapshot(
       cardsCol,
       snapshot => {
-        const data = snapshot.docs.map(doc => ({ _id: doc.id, ...(doc.data() as object) } as Card));
+        const data: Card[] = snapshot.docs.map(doc => ({
+        _id: doc.id,
+        ...(doc.data() as Omit<Card, '_id'>),
+      }));
         setCards(data);
         setLoading(false);
       },
@@ -269,14 +244,16 @@ export default function Front() {
         newCart[card.title].count += 1;
       } else {
         newCart[card.title] = {
-          count:       1,
-          price:       Number(card.price),
-          price_promo: Number(card.price_promo),
-          images:      card.images,
+          count:        1,
+          price:        Number(card.price),
+          price_promo:  card.price_promo ? Number(card.price_promo) : undefined,
+          images:       card.images,
           deliveryTime: card.deliveryTime,
           expiryDate:   card.time,
           _id:          card._id,
         };
+
+
       }
       localStorage.setItem('globalCart', JSON.stringify(newCart));
       return newCart;

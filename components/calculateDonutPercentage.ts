@@ -1,11 +1,8 @@
-export function calculateDonutPercentage(stock: string, stock_reduc: string): number {
-    const stockNumber = parseInt(stock);
-    const stockReducNumber = parseInt(stock_reduc);
+export function calculateDonutPercentage(stock: number, stock_reduc: number): number {
+  if (isNaN(stock) || isNaN(stock_reduc) || stock === 0) {
+    return 0;
+  }
 
-    if (isNaN(stockNumber) || isNaN(stockReducNumber)) {
-        return 0;
-    }
-
-    const percentage = ((stockNumber - stockReducNumber) / stockNumber) * 100;
-    return parseFloat(percentage.toFixed(2));
+  const percentage = ((stock - stock_reduc) / stock) * 100;
+  return parseFloat(percentage.toFixed(2));
 }

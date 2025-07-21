@@ -48,22 +48,57 @@ interface GlobalPriceProps {
   isOpen: boolean;
   onClose: () => void;
 }
+interface CartItem {
+  _id: string;
+  count: number;
+  price: number;
+  price_promo?: number; // 👈 important : facultatif
+  images: string[];
+  deliveryTime: string;
+  expiryDate: Date;
+}
+
+
+type GlobalCartItem = {
+  count: number;
+  price: number;
+  price_promo: number;
+  images: string[];
+  deliveryTime?: string;
+  expiryDate?: Date | string;
+  _id: string;
+};
+
+type GlobalCartType = {
+  [title: string]: GlobalCartItem;
+};
+
+
+
+type StockStatusType = {
+  [title: string]: number;
+};
+type DeliveryInfo = {
+  name: string;
+  address: string;
+  postalCode: string;
+  city: string;
+  phone?: string;
+};
 
 const GlobalPrice: React.FC<GlobalPriceProps> = ({ isOpen, onClose: closeParent }) => {
   const [cartInfo, setCartInfo] = useState<any[]>([]);
   const { onClose: modalOnClose } = useDisclosure();
   const [productToRemove, setProductToRemove] = useState(null);
-  const { globalCart, setGlobalCart } = useContext(GlobalCartContext);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const cartCount = Object.values(globalCart).reduce((sum, item) => sum + item.count, 0);
   const [buttonText, setButtonText] = useState('Mon panier est à jour');
   const { user } = useAuth();
-  const [stockStatus, setStockStatus] = useState({});
+  const [stockStatus, setStockStatus] = useState<Record<string, number>>({});
   const toast = useToast();
-  const [badItems, setBadItems] = useState([]);
+  const [badItems, setBadItems] = useState<string[]>([]);
   const [previouslyBoughtTitles, setPreviouslyBoughtTitles] = useState<string[]>([]);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
@@ -71,80 +106,94 @@ const GlobalPrice: React.FC<GlobalPriceProps> = ({ isOpen, onClose: closeParent 
     unavailableItems: string[];
     insufficientStockItems: { title: string; requested: number; available: number }[];
   }>({ unavailableItems: [], insufficientStockItems: [] });
+  
+const cartContext = useContext(GlobalCartContext);
 
-  // Fonction pour nettoyer les produits supprimés du panier
-  const cleanupDeletedProducts = async () => {
-    const currentCart = { ...globalCart };
-    let hasDeletedProducts = false;
-    const deletedProducts = [];
+if (!cartContext) {
+  throw new Error('GlobalCartContext is undefined');
+}
 
-    // Vérifier chaque produit du panier
-    for (const [title, item] of Object.entries(currentCart)) {
-      if (!item._id) continue;
+const [globalCart, setGlobalCart] = useState<GlobalCartType>(() => {
+  if (typeof window !== 'undefined') {
+    const stored = localStorage.getItem('globalCart');
+    return stored ? JSON.parse(stored) : {};
+  }
+  return {};
+});
 
-      try {
-        const productRef = doc(db, 'cards', item._id);
-        const productSnap = await getDoc(productRef);
+const cartCount = Object.values(globalCart).reduce((sum, item) => sum + item.count, 0);
 
-        // Si le produit n'existe plus dans la base de données
-        if (!productSnap.exists()) {
-          delete currentCart[title];
-          deletedProducts.push(title);
-          hasDeletedProducts = true;
-          console.log(`🗑️ Produit supprimé du panier (n'existe plus) : ${title}`);
-        }
-      } catch (error) {
-        console.error(`Erreur lors de la vérification du produit ${title}:`, error);
-        // En cas d'erreur, on peut choisir de supprimer le produit du panier
+const cleanupDeletedProducts = async () => {
+  const currentCart: GlobalCartType = { ...globalCart };
+  let hasDeletedProducts = false;
+  const deletedProducts: string[] = [];
+
+  // Vérifier chaque produit du panier
+  for (const [title, item] of Object.entries(currentCart)) {
+    if (!item._id) continue;
+
+    try {
+      const productRef = doc(db, 'cards', item._id);
+      const productSnap = await getDoc(productRef);
+
+      // Si le produit n'existe plus dans la base de données
+      if (!productSnap.exists()) {
         delete currentCart[title];
         deletedProducts.push(title);
         hasDeletedProducts = true;
+        console.log(`🗑️ Produit supprimé du panier (n'existe plus) : ${title}`);
       }
+    } catch (error) {
+      console.error(`Erreur lors de la vérification du produit ${title}:`, error);
+      delete currentCart[title];
+      deletedProducts.push(title);
+      hasDeletedProducts = true;
     }
+  }
 
-    // Si des produits ont été supprimés, mettre à jour le panier
-    if (hasDeletedProducts) {
-      setGlobalCart(currentCart);
-      localStorage.setItem('globalCart', JSON.stringify(currentCart));
+  // Si des produits ont été supprimés, mettre à jour le panier
+  if (hasDeletedProducts) {
+    setGlobalCart(currentCart);
+    localStorage.setItem('globalCart', JSON.stringify(currentCart));
 
-      // Nettoyer cartInfo également
-      let cartInfo = JSON.parse(localStorage.getItem('cartInfo') || '[]');
-      cartInfo = cartInfo
-        .map(cart => {
-          const updatedTitles = cart.titles.filter((t: string) => !deletedProducts.includes(t));
-          const updatedImages = cart.images.filter((_, index) => !deletedProducts.includes(cart.titles[index]));
-          const updatedPrices = cart.prices.filter((_, index) => !deletedProducts.includes(cart.titles[index]));
-          const updatedPricePromos = cart.price_promos.filter((_, index) => !deletedProducts.includes(cart.titles[index]));
-          const updatedDeliveryDates = cart.deliveryDates.filter((_, index) => !deletedProducts.includes(cart.titles[index]));
+    // Nettoyer cartInfo également
+    let cartInfo = JSON.parse(localStorage.getItem('cartInfo') || '[]');
+    cartInfo = cartInfo
+      .map((cart: any) => {
+        const updatedTitles = cart.titles.filter((t: string) => !deletedProducts.includes(t));
+        const updatedImages = cart.images.filter((_: any, index: number) => !deletedProducts.includes(cart.titles[index]));
+        const updatedPrices = cart.prices.filter((_: any, index: number) => !deletedProducts.includes(cart.titles[index]));
+        const updatedPricePromos = cart.price_promos.filter((_: any, index: number) => !deletedProducts.includes(cart.titles[index]));
+        const updatedDeliveryDates = cart.deliveryDates.filter((_: any, index: number) => !deletedProducts.includes(cart.titles[index]));
 
-          return {
-            ...cart,
-            titles: updatedTitles,
-            images: updatedImages,
-            prices: updatedPrices,
-            price_promos: updatedPricePromos,
-            deliveryDates: updatedDeliveryDates,
-          };
-        })
-        .filter(cart => cart.titles.length > 0);
+        return {
+          ...cart,
+          titles: updatedTitles,
+          images: updatedImages,
+          prices: updatedPrices,
+          price_promos: updatedPricePromos,
+          deliveryDates: updatedDeliveryDates,
+        };
+      })
+      .filter((cart: any) => cart.titles.length > 0);
 
-      localStorage.setItem('cartInfo', JSON.stringify(cartInfo));
+    localStorage.setItem('cartInfo', JSON.stringify(cartInfo));
 
-      // Afficher une notification à l'utilisateur
-      if (deletedProducts.length > 0) {
-        toast({
-          title: "Produits supprimés du panier",
-          description: `Les produits suivants ne sont plus disponibles et ont été retirés : ${deletedProducts.join(', ')}`,
-          status: "warning",
-          duration: 6000,
-          isClosable: true,
-          position: "top",
-        });
-      }
+    // Afficher une notification à l'utilisateur
+    if (deletedProducts.length > 0) {
+      toast({
+        title: "Produits supprimés du panier",
+        description: `Les produits suivants ne sont plus disponibles et ont été retirés : ${deletedProducts.join(', ')}`,
+        status: "warning",
+        duration: 6000,
+        isClosable: true,
+        position: "top",
+      });
     }
+  }
 
-    return hasDeletedProducts;
-  };
+  return hasDeletedProducts;
+};
 
   // Vérifier périodiquement les produits supprimés
   useEffect(() => {
@@ -206,70 +255,81 @@ const GlobalPrice: React.FC<GlobalPriceProps> = ({ isOpen, onClose: closeParent 
     return () => unsub();
   }, [globalCart]);
 
-  useEffect(() => {
-    const fetchStock = async () => {
-      if (!db) return;
-      
-      const status = {};
-      await Promise.all(
-        Object.entries(globalCart).map(async ([title, item]) => {
-          if (!item._id) return;
-          
-          try {
-            const snap = await getDoc(doc(db, 'cards', item._id));
-            if (snap.exists()) {
-              const data = snap.data();
-              status[title] = Number(data.stock) - Number(data.stock_reduc);
-            } else {
-              // Le produit n'existe plus, le supprimer du panier
-              setGlobalCart(prev => {
-                const next = { ...prev };
-                delete next[title];
-                localStorage.setItem('globalCart', JSON.stringify(next));
-                return next;
-              });
-              
-              toast({
-                title: "Produit supprimé",
-                description: `"${title}" n'est plus disponible et a été retiré du panier.`,
-                status: "warning",
-                duration: 4000,
-                isClosable: true,
-              });
-            }
-          } catch (error) {
-            console.error(`Erreur lors de la vérification du produit ${title}:`, error);
+useEffect(() => {
+  const fetchStock = async () => {
+    if (!db) return;
+
+    const status: Record<string, number> = {};
+
+    await Promise.all(
+      Object.entries(globalCart).map(async ([title, item]) => {
+        if (!item._id) return;
+
+        try {
+          const snap = await getDoc(doc(db, 'cards', item._id));
+          if (snap.exists()) {
+            const data = snap.data();
+            status[title] = Number(data.stock) - Number(data.stock_reduc);
+          } else {
+            // Le produit n'existe plus, le supprimer du panier
+            setGlobalCart(prev => {
+              const next = { ...prev };
+              delete next[title];
+              localStorage.setItem('globalCart', JSON.stringify(next));
+              return next;
+            });
+
+            toast({
+              title: "Produit supprimé",
+              description: `"${title}" n'est plus disponible et a été retiré du panier.`,
+              status: "warning",
+              duration: 4000,
+              isClosable: true,
+            });
           }
-        })
-      );
-      setStockStatus(status);
-    };
-    
-    if (Object.keys(globalCart).length > 0) {
-      fetchStock();
-    }
-  }, [globalCart]);
+        } catch (error) {
+          console.error(`Erreur lors de la vérification du produit ${title}:`, error);
+        }
+      })
+    );
+
+    setStockStatus(status);
+  };
+
+  if (Object.keys(globalCart).length > 0) {
+    fetchStock();
+  }
+}, [globalCart]);
+
 
   // Adjust cart if stockStatus drops below current count
-  useEffect(() => {
-    Object.entries(stockStatus).forEach(([title, available]) => {
-      const currentCount = globalCart[title]?.count || 0;
-      if (available < currentCount) {
-        setGlobalCart(prev => {
-          const next = { ...prev };
-          next[title].count = available;
-          return next;
-        });
-        toast({
-          title: "Quantité ajustée",
-          description: `"${title}" réduit à ${available} (stock réel).`,
-          status: "warning",
-          duration: 4000,
-          isClosable: true,
-        });
-      }
-    });
-  }, [stockStatus]);
+useEffect(() => {
+  Object.entries(stockStatus).forEach(([title, available]) => {
+    const currentCount = globalCart[title]?.count || 0;
+
+    if (available < currentCount) {
+      setGlobalCart(prev => {
+        const next = { ...prev };
+        if (next[title]) {            // <-- vérifie que l'item existe
+          next[title] = {              // évite la mutation directe
+            ...next[title],
+            count: available,
+          };
+        }
+        return next;
+      });
+
+      toast({
+        title: "Quantité ajustée",
+        description: `"${title}" réduit à ${available} (stock réel).`,
+        status: "warning",
+        duration: 4000,
+        isClosable: true,
+      });
+    }
+  });
+}, [stockStatus]);
+
 
   // determine if any item is out of stock
   const outOfStockItems = Object.entries(stockStatus)
@@ -345,27 +405,37 @@ const GlobalPrice: React.FC<GlobalPriceProps> = ({ isOpen, onClose: closeParent 
     return () => unsubscribes.forEach(unsub => unsub());
   }, [globalCart]);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const now = new Date();
-      const updatedCart = { ...globalCart };
-      let changed = false;
-  
-      for (const [title, item] of Object.entries(globalCart)) {
-        if (item.expiryDate && new Date(item.expiryDate) < now) {
-          delete updatedCart[title];
-          changed = true;
-          console.log(`🗑️ Supprimé automatiquement (expiration) : ${title}`);
-        }
+useEffect(() => {
+  const interval = setInterval(() => {
+    const now = new Date();
+    const updatedCart = { ...globalCart };
+    let changed = false;
+
+    for (const [title, item] of Object.entries(globalCart)) {
+      if (item.expiryDate && new Date(item.expiryDate) < now) {
+        delete updatedCart[title];
+        changed = true;
+        console.log(`🗑️ Supprimé automatiquement (expiration) : ${title}`);
       }
-  
-      if (changed) {
-        setGlobalCart(updatedCart);
-        localStorage.setItem('globalCart', JSON.stringify(updatedCart));
-  
-        // 🔁 Nettoyer cartInfo
-        let cartInfo = JSON.parse(localStorage.getItem('cartInfo') || '[]');
-        cartInfo = cartInfo.map(cart => {
+    }
+
+    if (changed) {
+      setGlobalCart(updatedCart);
+      localStorage.setItem('globalCart', JSON.stringify(updatedCart));
+
+      // Définition du type pour cartInfo
+      type CartInfoItem = {
+        titles: string[];
+        images: string[];
+        prices: number[];
+        price_promos: number[];
+        deliveryDates: string[];
+      };
+
+      let cartInfo: CartInfoItem[] = JSON.parse(localStorage.getItem('cartInfo') || '[]');
+
+      cartInfo = cartInfo
+        .map(cart => {
           const newTitles = cart.titles.filter(t => updatedCart[t]);
           return {
             ...cart,
@@ -375,23 +445,25 @@ const GlobalPrice: React.FC<GlobalPriceProps> = ({ isOpen, onClose: closeParent 
             price_promos: cart.price_promos.filter((_, i) => updatedCart[cart.titles[i]]),
             deliveryDates: cart.deliveryDates.filter((_, i) => updatedCart[cart.titles[i]]),
           };
-        }).filter(cart => cart.titles.length > 0);
-  
-        localStorage.setItem('cartInfo', JSON.stringify(cartInfo));
-  
-        toast({
-          title: "Produit expiré supprimé",
-          description: "Des produits ont été automatiquement retirés.",
-          status: "warning",
-          duration: 4000,
-          isClosable: true,
-          position: "top",
-        });
-      }
-    }, 60000); // toutes les 60s
-  
-    return () => clearInterval(interval);
-  }, [globalCart]);
+        })
+        .filter(cart => cart.titles.length > 0);
+
+      localStorage.setItem('cartInfo', JSON.stringify(cartInfo));
+
+      toast({
+        title: "Produit expiré supprimé",
+        description: "Des produits ont été automatiquement retirés.",
+        status: "warning",
+        duration: 4000,
+        isClosable: true,
+        position: "top",
+      });
+    }
+  }, 60000); // toutes les 60s
+
+  return () => clearInterval(interval);
+}, [globalCart]);
+
   
   useEffect(() => {
     const info = Object.entries(globalCart).map(([title, item]) => {
@@ -423,16 +495,21 @@ const GlobalPrice: React.FC<GlobalPriceProps> = ({ isOpen, onClose: closeParent 
   }, [isOpen]);
 
   // Charger le panier depuis le localStorage au démarrage
-  useEffect(() => {
-    const storedCart = JSON.parse(localStorage.getItem('globalCart')) || {};
-    setGlobalCart(storedCart);
-  
-    // Vérifier si un article du panier a déjà été acheté
-    const repeated = Object.keys(storedCart).filter(title => previouslyBoughtTitles.includes(title));
-    if (repeated.length > 0) {
-      // Logique pour les articles déjà achetés
-    }
-  }, [setGlobalCart, previouslyBoughtTitles]);
+useEffect(() => {
+  if (typeof window === 'undefined') return; // Sécurité côté serveur
+
+  const storedCart = JSON.parse(localStorage.getItem('globalCart') || '{}') as GlobalCartType;
+  setGlobalCart(storedCart);
+
+  const repeated = Object.keys(storedCart).filter(title =>
+    previouslyBoughtTitles.includes(title)
+  );
+
+  if (repeated.length > 0) {
+    // Logique pour les articles déjà achetés
+  }
+}, [setGlobalCart, previouslyBoughtTitles]);
+
 
   // 🔧 CORRECTION: Gestion du scroll sans bloquer les interactions
   useEffect(() => {
@@ -461,20 +538,21 @@ const GlobalPrice: React.FC<GlobalPriceProps> = ({ isOpen, onClose: closeParent 
   }, []);
 
   // Diminuer la quantité ou supprimer l'article si count === 1
-  const handleDecrease = (product) => {
-    const newCart = { ...globalCart };
-    if (newCart[product]?.count > 1) {
-      newCart[product].count = (newCart[product].count || 1) - 1;
-      setGlobalCart(newCart);
-      localStorage.setItem('globalCart', JSON.stringify(newCart));
-    } else {
-      handleRemove(product);
-    }
-    setButtonText('Mettre à jour mon panier');
-  };
+const handleDecrease = (title: string) => {
+  const newCart = { ...globalCart };
+  if (newCart[title]?.count > 1) {
+    newCart[title].count = (newCart[title].count || 1) - 1;
+    setGlobalCart(newCart);
+    localStorage.setItem('globalCart', JSON.stringify(newCart));
+  } else {
+    handleRemove(title);
+  }
+  setButtonText('Mettre à jour mon panier');
+};
+
 
   // Augmenter la quantité de l'article
-  const handleIncrease = async (title) => {
+  const handleIncrease = async (title: string) => {
     const newCart = { ...globalCart };
     const item = newCart[title];
   
@@ -606,7 +684,7 @@ const GlobalPrice: React.FC<GlobalPriceProps> = ({ isOpen, onClose: closeParent 
   };
 
   // Enregistrer le panier dans Firebase (par exemple après validation)
-  const saveCartToFirebase = async (deliveryInfo) => {
+  const saveCartToFirebase = async (deliveryInfo: DeliveryInfo) => {
     if (!user || !db) return;
     try {
       const cartData = {
@@ -767,10 +845,11 @@ const GlobalPrice: React.FC<GlobalPriceProps> = ({ isOpen, onClose: closeParent 
     color: black;
   `;
 
-  const total = Object.values(globalCart).reduce(
-    (sum, item) => sum + item.count * (item.price_promo || item.price),
-    0
-  ) || 0;
+const total = Object.values(globalCart).reduce(
+  (sum, item) => sum + item.count * Number(item.price_promo || item.price),
+  0
+) || 0;
+
 
   // 🔧 CORRECTION: Fonction onClose qui ne bloque pas les interactions
   const onClose = (e?: React.MouseEvent) => {

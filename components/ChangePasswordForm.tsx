@@ -18,14 +18,24 @@ const ChangePasswordForm = () => {
         duration: 5000,
         isClosable: true,
       });
-    } catch (error) {
-      toast({
-        title: 'Erreur',
-        description: error.message,
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast({
+          title: 'Erreur',
+          description: error.message,
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+        });
+      } else {
+        toast({
+          title: 'Erreur inconnue',
+          description: 'Une erreur est survenue lors de la réinitialisation du mot de passe.',
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+        });
+      }
     }
   };
 

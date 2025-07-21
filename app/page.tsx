@@ -38,7 +38,6 @@ type CartItem = {
   stock?: number;
   stock_reduc?: number;
   id?: string;
-  // ajoute ici d'autres propriétés si besoin
 };
 
 export default function Home() {
@@ -61,7 +60,6 @@ interface InnerHomeProps {
 function InnerHome({ user }: InnerHomeProps) {
   const { globalCart, setGlobalCart } = useGlobalCart();
 
-  // On précise ici que globalCart est un objet avec des valeurs de type CartItem
   const typedGlobalCart: Record<string, CartItem> = globalCart || {};
 
   const [activeModal, setActiveModal] = useState<string | null>(null);
@@ -91,11 +89,9 @@ function InnerHome({ user }: InnerHomeProps) {
     }
   };
 
-  // Ici TypeScript sait que item a un champ count
   const cartCount =
     Object.values(typedGlobalCart).reduce((sum, item) => sum + (item.count || 0), 0) || 0;
 
-  // 🔄 Synchronisation en temps réel des produits dans Firestore
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, 'cards'), (snapshot) => {
       const latestProducts: Record<string, any> = {};
@@ -109,14 +105,15 @@ function InnerHome({ user }: InnerHomeProps) {
 
         Object.entries(globalCart).forEach(([cartId, cartItem]) => {
           const latestProduct = latestProducts[cartId];
+          const item = cartItem as CartItem; // ✅ typage explicite ici
 
           if (
             latestProduct &&
-            cartItem.name === latestProduct.name &&
-            cartItem.price === latestProduct.price &&
+            item.name === latestProduct.name &&
+            item.price === latestProduct.price &&
             latestProduct.stock > latestProduct.stock_reduc
           ) {
-            updatedCart[cartId] = { ...latestProduct, count: cartItem.count };
+            updatedCart[cartId] = { ...latestProduct, count: item.count };
           } else {
             cartChanged = true;
           }

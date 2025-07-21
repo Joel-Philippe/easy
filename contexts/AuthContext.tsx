@@ -167,4 +167,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+// Hook personnalisé sécurisé : lève une erreur si AuthContext est null
+export const useAuth = (): AuthContextType => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth doit être utilisé à l’intérieur d’un AuthProvider');
+  }
+  return context;
+};

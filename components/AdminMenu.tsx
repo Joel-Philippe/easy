@@ -17,12 +17,16 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 
 const AdminMenu = () => {
-  const { logout } = useAuth();
+  const auth = useAuth();
   const router = useRouter();
   
   const handleLogout = async () => {
+    if (!auth) {
+      console.error("Contexte d'authentification non disponible");
+      return;
+    }
     try {
-      await logout();
+      await auth.logout();
       router.push('/');
     } catch (error) {
       console.error('Erreur lors de la déconnexion:', error);

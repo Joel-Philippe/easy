@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   Button, useToast, AlertDialog, AlertDialogBody, AlertDialogFooter,
   AlertDialogHeader, AlertDialogContent, AlertDialogOverlay, Input, FormControl, FormLabel
@@ -10,7 +10,7 @@ const DeleteAccountButton = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [password, setPassword] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
-  const cancelRef = React.useRef();
+  const cancelRef = useRef<HTMLButtonElement>(null); // ✅ Typage correct pour le ref du bouton
   const toast = useToast();
 
   const handleDelete = async () => {
@@ -25,10 +25,13 @@ const DeleteAccountButton = () => {
         duration: 5000,
         isClosable: true,
       });
-    } catch (error) {
+    } catch (error: unknown) {
+      const message = error instanceof Error
+        ? error.message
+        : "La suppression du compte a échoué.";
       toast({
         title: 'Erreur',
-        description: error.message || "La suppression du compte a échoué.",
+        description: message,
         status: 'error',
         duration: 5000,
         isClosable: true,
@@ -48,7 +51,7 @@ const DeleteAccountButton = () => {
 
       <AlertDialog
         isOpen={isOpen}
-        leastDestructiveRef={cancelRef}
+        leastDestructiveRef={cancelRef} // ✅ Accepte RefObject<HTMLButtonElement>
         onClose={() => setIsOpen(false)}
       >
         <AlertDialogOverlay>

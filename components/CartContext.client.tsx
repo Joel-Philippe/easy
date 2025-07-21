@@ -1,4 +1,4 @@
-import React, { useReducer, createContext } from 'react';
+import React, { useReducer, createContext, ReactNode } from 'react'; 
 
 interface Product {
   title: string;
@@ -24,7 +24,10 @@ const initialState: State = {
   quantity: {},
 };
 
-export const CartContext = createContext<CartContextProps>({ state: initialState, dispatch: () => undefined });
+export const CartContext = createContext<CartContextProps>({
+  state: initialState,
+  dispatch: () => undefined,
+});
 
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
@@ -37,7 +40,12 @@ const reducer = (state: State, action: Action): State => {
   }
 };
 
-export const CartProvider: React.FC = ({ children }) => {
+// Définition explicite des props avec children
+interface CartProviderProps {
+  children: ReactNode;
+}
+
+export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
